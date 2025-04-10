@@ -1,0 +1,43 @@
+<div class=" mx-auto mt-16 px-6">
+  <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-purple-600 to-pink-500 px-8 py-6 shadow text-white rounded-t-xl">
+      <h2 class="text-3xl font-bold flex items-center gap-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m2 0a2 2 0 100-4h-1.18a2 2 0 01-1.44-.63l-1.28-1.34A2 2 0 0011 4.34L9.73 5.37A2 2 0 018.27 6H7a2 2 0 000 4h2" />
+        </svg>
+        Activity Log #<%= @activity_log.id %>
+      </h2>
+    </div>
+
+    <div class="p-8 text-gray-800 space-y-6">
+      <div>
+        <p class="text-lg font-semibold">📄 Record Type:</p>
+        <p class="text-gray-700"><%= @activity_log.record_type %></p>
+      </div>
+
+      <div>
+        <p class="text-lg font-semibold">🔗 Record ID:</p>
+        <p class="text-gray-700"><%= @activity_log.record_id %></p>
+      </div>
+
+      <div>
+        <p class="text-lg font-semibold">⚙️ Action:</p>
+        <p class="text-blue-700 font-medium"><%= @activity_log.action %></p>
+      </div>
+
+      <div>
+        <p class="text-lg font-semibold">💬 Message:</p>
+        <p class="text-gray-700"><%= @activity_log.message %></p>
+      </div>
+
+      <div>
+        <p class="text-lg font-semibold">🕒 Created At:</p>
+        <p class="text-gray-600"><%= @activity_log.created_at.strftime('%B %d, %Y %I:%M %p') %></p>
+      </div>
+
+      <div class="pt-6">
+        <%= link_to '← Back to Logs', admin_activity_logs_path, class: 'bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-lg shadow transition' %>
+      </div>
+    </div>
+  </div>
+</div>

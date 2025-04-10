@@ -1,0 +1,43 @@
+<div class="max-w-6xl mx-auto mt-16 px-6">
+  <div class="bg-white shadow-md rounded-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-teal-500 to-blue-600 px-8 py-6 shadow text-white rounded-t-xl">
+      <h2 class="text-3xl font-bold flex items-center gap-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        Activity Logs
+      </h2>
+    </div>
+
+    <div class="p-8">
+      <table class="min-w-full text-left border-collapse text-gray-800">
+        <thead class="bg-gray-100 text-sm font-semibold">
+          <tr>
+            <th class="px-6 py-3 border-b">ID</th>
+            <th class="px-6 py-3 border-b">Record Type</th>
+            <th class="px-6 py-3 border-b">Record ID</th>
+            <th class="px-6 py-3 border-b">Action</th>
+            <th class="px-6 py-3 border-b">Message</th>
+            <th class="px-6 py-3 border-b">Created At</th>
+            <th class="px-6 py-3 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @activity_logs.each do |log| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 border-b"><%= log.id %></td>
+              <td class="px-6 py-4 border-b"><%= log.record_type %></td>
+              <td class="px-6 py-4 border-b"><%= log.record_id %></td>
+              <td class="px-6 py-4 border-b font-medium text-blue-600"><%= log.action %></td>
+              <td class="px-6 py-4 border-b"><%= truncate(log.message, length: 50) %></td>
+              <td class="px-6 py-4 border-b"><%= log.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+              <td class="px-6 py-4 border-b">
+                <%= link_to '🔍 View', admin_activity_log_path(log), class: 'text-indigo-600 hover:underline' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

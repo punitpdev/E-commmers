@@ -1,0 +1,82 @@
+<div class="max-w-7xl mx-auto mt-16 px-6">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-12 py-10 shadow-md">
+        <h2 class="text-4xl font-bold text-white flex items-center gap-4">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3V3z" />
+          </svg>
+          <%= @product.name %>
+        </h2>
+      </div>
+
+      <!-- Content Body -->
+      <div class="px-12 py-12 space-y-12 text-gray-800">
+
+        <!-- Product Image -->
+        <div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-4">📸 Product Image</h3>
+          <% if @product.image.attached? %>
+            <%= image_tag @product.image, class: "w-full h-96 object-cover rounded-xl shadow-md" %>
+          <% else %>
+            <div class="w-full h-96 bg-gray-100 rounded-xl flex items-center justify-center">
+              <p class="text-gray-400">No image available</p>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">📝 Description</h3>
+          <p class="text-lg text-gray-600 leading-relaxed"><%= @product.description %></p>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">💰 Price</h3>
+          <p class="text-2xl font-bold text-green-600">$<%= number_with_precision(@product.price, precision: 2) %></p>
+        </div>
+
+        <!-- Stock -->
+        <div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">📦 Stock Quantity</h3>
+          <p class="text-lg text-gray-800"><%= @product.stock_quantity %> units</p>
+        </div>
+
+        <!-- Variants -->
+        <% if @product.variants.any? %>
+          <div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-3">🎨 Variants</h3>
+            <div class="overflow-x-auto rounded-lg shadow-sm border">
+              <table class="min-w-full text-md text-left border-collapse">
+                <thead class="bg-gray-100 text-gray-700 font-semibold">
+                  <tr>
+                    <th class="px-6 py-4 border-b">Option Type</th>
+                    <th class="px-6 py-4 border-b">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @product.variants.each do |variant| %>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 border-b"><%= variant.option_type %></td>
+                      <td class="px-6 py-4 border-b"><%= variant.value %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Action Buttons -->
+        <div class="pt-8 flex flex-col sm:flex-row gap-4">
+          <%= link_to '✏️ Edit Product', edit_product_path(@product), class: 'bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-3 rounded-xl shadow-md transition' %>
+          <%= link_to '← Back to Products', admin_products_path, class: 'bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium px-6 py-3 rounded-xl shadow-md transition' %>
+          <%= button_to '🗑️ Delete', product_path(@product), method: :delete,
+                form: { data: { turbo_confirm: "Are you sure you want to delete this product?" } },
+                class: 'bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-3 rounded-xl shadow-md transition' %>
+        </div>
+      </div>
+    </div>
+  </div>

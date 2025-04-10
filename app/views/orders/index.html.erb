@@ -1,0 +1,67 @@
+<div class="container mx-auto px-6 py-10">
+  <h1 class="text-4xl font-bold text-gray-800 mb-10">My Orders</h1>
+
+  <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-10">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300 text-base">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Order #</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Date</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Items</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Total Amount</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Status</th>
+            <th class="px-6 py-4 text-left font-semibold text-gray-600 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @orders.each do |order| %>
+            <tr data-controller="order"  data-action="click->order#toggleDetails" class="hover:bg-gray-50 cursor-pointer transition duration-200">
+              <td class="px-6 py-4 text-gray-900 font-medium">#<%= order.id %></td>
+              <td class="px-6 py-4 text-gray-600"><%= order.created_at.strftime("%b %d, %Y") %></td>
+              <td class="px-6 py-4 text-gray-600"><%= order.order_items.count %></td>
+              <td class="px-6 py-4 font-semibold text-gray-800">$<%= number_with_precision(order.total_amount, precision: 2) %></td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 inline-block text-sm font-semibold rounded-full <%= status_color(order.status) %>">
+                  <%= order.status.humanize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-purple-600 hover:text-purple-900 font-medium">
+                <%= link_to 'View', order_path(order) %>
+              </td>
+            </tr>
+
+            <!-- Expanded order details row -->
+            <tr id="order-details-<%= order.id %>" class="hidden order-details-row bg-gray-50">
+              <td colspan="6" class="px-8 py-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Order Items</h2>
+                <div class="rounded-lg overflow-hidden border border-gray-200">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100 text-sm text-gray-600">
+                      <tr>
+                        <th class="py-3 px-4 text-left">Product</th>
+                        <th class="py-3 px-4 text-left">Quantity</th>
+                        <th class="py-3 px-4 text-left">Price</th>
+                        <th class="py-3 px-4 text-left">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100 text-sm">
+                      <% order.order_items.each do |item| %>
+                        <tr>
+                          <td class="px-4 py-3 font-medium text-gray-800"><%= item.product.name %></td>
+                          <td class="px-4 py-3 text-gray-600"><%= item.quantity %></td>
+                          <td class="px-4 py-3 text-gray-600">$<%= number_with_precision(item.price, precision: 2) %></td>
+                          <td class="px-4 py-3 font-semibold text-gray-800">$<%= number_with_precision(item.price * item.quantity, precision: 2) %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

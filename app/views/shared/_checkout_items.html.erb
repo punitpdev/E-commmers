@@ -1,0 +1,77 @@
+<turbo-frame id="checkout_items">
+   <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-gray-800">Your Cart</h2>
+    <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+      <%= cart_items.count %> items
+    </span>
+   </div>
+
+  <% if cart_items.present? %>
+    <ul class="space-y-3">
+      <% cart_items.each do |item| %>
+        <li class="group relative bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+          <div class="flex justify-between items-start">
+            <div class="flex-1 min-w-0">
+              <h3 class="font-medium text-gray-900 truncate"><%= item.product.name %></h3>
+              <p class="text-sm text-gray-500 mt-1">$<%= number_with_precision(item.price, precision: 2) %> each</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <!-- Quantity Controls -->
+              <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <%= button_to '-', decrease_cart_item_path(item), 
+                    method: :patch, 
+                    form: { data: { turbo_frame: "checkout_items" } }, 
+                    class: "px-3 py-1 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition" %>
+
+                <span class="px-3 py-1 text-gray-700 bg-white"><%= item.quantity %></span>
+
+                <%= button_to '+', increase_cart_item_path(item), 
+                    method: :patch, 
+                    form: { data: { turbo_frame: "checkout_items" } }, 
+                    class: "px-3 py-1 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 transition" %>
+              </div>
+
+              <!-- Remove item -->
+              <%= button_to cart_item_path(item), 
+                  method: :delete, 
+                  data: { turbo_confirm: "Remove #{item.product.name} from cart?" }, 
+                  form: { data: { turbo_frame: "checkout_items" } }, 
+                  class: "ml-2 p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Item subtotal -->
+          <div class="mt-2 text-right">
+            <span class="text-sm font-medium text-gray-700">
+              $<%= number_with_precision(item.price * item.quantity, precision: 2) %>
+            </span>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Cart total -->
+    <div class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl">
+      <div class="flex justify-between items-center">
+        <span class="font-semibold text-gray-700">Order Total</span>
+        <span class="text-xl font-bold text-purple-600">
+          $<%= number_with_precision(cart_items.sum { |item| item.price.to_f * item.quantity }, precision: 2) %>
+        </span>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center py-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      <h3 class="mt-2 text-lg font-medium text-gray-700">Your cart is empty</h3>
+      <p class="mt-1 text-gray-500">Add some products to get started</p>
+      <%= link_to "Browse products", products_path, class: "mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+    </div>
+  <% end %>
+</turbo-frame>

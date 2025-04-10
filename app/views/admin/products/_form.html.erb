@@ -1,0 +1,105 @@
+<%= form_with(
+  model: @product, 
+  url: @product.persisted? ? admin_product_path(@product) : admin_products_path, 
+  class: "space-y-8 p-8 bg-white shadow-xl rounded-2xl") do |f| %>
+  
+  <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">Product Details</h2>
+
+  <div>
+    <%= f.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.text_field :name, class: "w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+    <% if @product.errors[:name].any? %>
+      <p class="text-red-500 text-sm mt-1"><%= @product.errors[:name].join(", ") %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.text_area :description, rows: 4, class: "w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+    <% if @product.errors[:description].any? %>
+      <p class="text-red-500 text-sm mt-1"><%= @product.errors[:description].join(", ") %></p>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :price, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.number_field :price, step: "0.01", class: "w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+      <% if @product.errors[:price].any? %>
+        <p class="text-red-500 text-sm mt-1"><%= @product.errors[:price].join(", ") %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :stock_quantity, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.number_field :stock_quantity, class: "w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+      <% if @product.errors[:stock_quantity].any? %>
+        <p class="text-red-500 text-sm mt-1"><%= @product.errors[:stock_quantity].join(", ") %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <%= f.label :image, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <div class="mt-1 flex items-center" data-controller="preview">
+      <%= f.file_field :image, 
+          class: "w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none",
+          accept: 'image/*',
+          data: { 
+            action: "change->preview#showImage",
+            preview_target: "input" 
+          } %>
+    </div>
+    
+    <div class="mt-2" data-controller="preview">
+      <% if @product.image.attached? %>
+        <%= image_tag @product.image, 
+            class: "h-32 w-32 object-cover rounded-lg", 
+            data: { preview_target: "output" } %>
+      <% else %>
+        <%= image_tag "", 
+            class: "h-32 w-32 object-cover rounded-lg hidden", 
+            data: { preview_target: "output" } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div data-controller="variants">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Variants</h3>
+    <div id="variants" class="space-y-4">
+      <%= f.fields_for :variants do |variant_form| %>
+        <%= render 'variant_fields', f: variant_form %>
+      <% end %>
+    </div>
+
+    <button type="button"
+            data-action="click->variants#add"
+            class="mt-4 inline-flex items-center px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-200">
+      + Add Variant
+    </button>
+  </div>
+
+  <div class="pt-6 border-t mt-6 flex justify-between items-center">
+    <%= f.submit "Save Product", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300" %>
+    <%= link_to "Back", admin_products_path, class: "text-blue-600 hover:text-blue-800 font-medium" %>
+  </div>
+<% end %>
+<template id="variant_template">
+  <div class="variant-fields flex flex-wrap md:flex-nowrap items-center gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+    <select name="product[variants_attributes][TEMPLATE_RECORD][option_type]" class="w-full md:w-1/3 border border-gray-300 px-3 py-2 rounded">
+      <option value="">Select Option Type</option>
+      <option value="Size">Size</option>
+      <option value="Color">Color</option>
+      <option value="Type">Type</option>
+    </select>
+
+    <input type="text" name="product[variants_attributes][TEMPLATE_RECORD][value]" placeholder="Value" class="w-full md:w-1/3 border border-gray-300 px-3 py-2 rounded" />
+
+    <input type="hidden" name="product[variants_attributes][TEMPLATE_RECORD][_destroy]" value="false" />
+
+    <button type="button" data-action="click->variants#remove"
+            class="text-red-500 hover:text-red-700 text-sm font-medium transition duration-150">
+      Remove
+    </button>
+  </div>
+</template>
