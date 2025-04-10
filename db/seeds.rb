@@ -33,4 +33,5 @@ puts "Creating dummy products with images..."
   )
 end
 
+User.create(email: "adminUser@gmail.com", password: "password@123", role: "admin")
 puts "✅ Created #{Product.count} products with images."

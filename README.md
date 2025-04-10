@@ -29,15 +29,14 @@ Ensure you have the following installed:
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/your-username/rails-ecommerce-app.git
-cd rails-ecommerce-app
+git clone https://github.com/punitpdev/E-commmers
+cd E-commmers
 ```
 
 2. **Install dependencies**
 
 ```bash
 bundle install
-yarn install --check-files
 ```
 
 3. **Setup the database**
@@ -58,5 +57,11 @@ bin/rails db:create db:migrate db:seed
 ```bash
 bin/dev
 ```
+
+6. **Default Admin Credentials**
+```bash
+Email: adminUser@gmail.com
+Password: password@123
+role: admin
 
 Then visit [http://localhost:3000](http://localhost:3000).
